@@ -14,9 +14,13 @@ def analyze_judgment(file):
     except requests.exceptions.RequestException as e:
         return None, str(e)
 
-st.title('Judgment Summary App')
+st.title('Judgment Analysis App')
 
-input_text = st.text_area("Enter the text to analyze")
+# Create two columns
+col1, col2 = st.columns(2)
+
+with col1:
+    input_text = st.text_area("Enter the text to analyze")
 
 if st.button('Submit'):
     if input_text:
@@ -25,12 +29,14 @@ if st.button('Submit'):
         file.name = "input.txt"  # Give it a name if required by the API
         summary, time_taken = analyze_judgment(file)
         
-        if summary:
-            st.write("**Summary:**")
-            st.write(summary)
-            st.write("**Time Taken:**")
-            st.write(time_taken)
-        else:
-            st.write("Error during API call:", time_taken)
+        with col2:
+            if summary:
+                st.write("**Summary:**")
+                st.write(summary)
+                st.write("**Time Taken:**")
+                st.write(time_taken)
+            else:
+                st.write("Error during API call:", time_taken)
     else:
-        st.write("Please enter some text to analyze.")
+        with col2:
+            st.write("Please enter some text to analyze.")
