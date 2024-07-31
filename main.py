@@ -1,5 +1,13 @@
 import streamlit as st
 import requests
+import re
+
+def clean_text(text):
+    # Remove unwanted symbols and extra spaces
+    cleaned_text = re.sub(r'\s+', ' ', text)  # Replace multiple spaces with a single space
+    cleaned_text = re.sub(r'[^\w\s]', '', cleaned_text)  # Remove all non-word characters except spaces
+    cleaned_text = cleaned_text.strip()  # Remove leading and trailing spaces
+    return cleaned_text
 
 def analyze_judgment(text):
     url = 'https://90tdu1l307.execute-api.ap-south-1.amazonaws.com/'
@@ -23,7 +31,8 @@ with col1:
 
 if st.button('Submit'):
     if input_text:
-        summary, time_taken = analyze_judgment(input_text)
+        cleaned_text = clean_text(input_text)  # Clean the input text
+        summary, time_taken = analyze_judgment(cleaned_text)
         
         with col2:
             if summary:
