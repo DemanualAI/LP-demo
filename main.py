@@ -1,13 +1,12 @@
 import streamlit as st
 import requests
-import io
 
-def analyze_judgment(file):
+def analyze_judgment(text):
     url = 'https://90tdu1l307.execute-api.ap-south-1.amazonaws.com/'
     
-    files = {'file': file}
+    payload = {'text': text}
     try:
-        response = requests.post(url, files=files)
+        response = requests.post(url, json=payload)
         response.raise_for_status()  # Raise an error for bad status codes
         data = response.json()
         return data.get('summary'), data.get('time_taken')
@@ -24,10 +23,7 @@ with col1:
 
 if st.button('Submit'):
     if input_text:
-        # Create an in-memory text file
-        file = io.StringIO(input_text)
-        file.name = "input.txt"  # Give it a name if required by the API
-        summary, time_taken = analyze_judgment(file)
+        summary, time_taken = analyze_judgment(input_text)
         
         with col2:
             if summary:
